@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException, Depends
+from urllib import response
+from fastapi import APIRouter, HTTPException, Depends, Response
 from sqlalchemy.orm import Session
 from ..schemas import account as schema
 from ..crud import account as crud
@@ -19,7 +20,7 @@ def create_account(account: schema.AccountBase, db: Session = Depends(get_db)):
 def get_account(account_name: str, db: Session = Depends(get_db)):
     db_account = crud.get_account(db, name=account_name)
     if not db_account:
-        raise HTTPException(status_code=404)
+        return Response(status_code=404)
     return db_account
 
 
@@ -32,7 +33,7 @@ def deposit(account_name: str, deposit: schema.DepositWithdraw, db: Session = De
             status_code=400, detail="Please do not use more than 2 decimal places")
     db_account = crud.get_account(db, name=account_name)
     if not db_account:
-        raise HTTPException(status_code=404)
+        return Response(status_code=404)
     return crud.deposit(db=db, account=db_account, amount=actual_amount)
 
 
@@ -44,6 +45,8 @@ def withdraw(account_name: str, deposit: schema.DepositWithdraw, db: Session = D
         raise HTTPException(
             status_code=400, detail="Please do not use more than 2 decimal places")
     db_account = crud.get_account(db, name=account_name)
+    if not db_account:
+        return Response(status_code=404)
     if db_account.balance < amount:
         raise HTTPException(
             status_code=400, detail="Not enough funds")
