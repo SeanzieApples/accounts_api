@@ -6,7 +6,6 @@ from ..models import account as model
 def get_account(db: Session, name: str):
     return db.query(model.Account).filter(model.Account.name.ilike(name)).first()
 
-
 def create_account(db: Session, account: schema.AccountBase):
     db_account = model.Account(name=account.name)
     db.add(db_account)
