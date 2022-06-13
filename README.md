@@ -6,24 +6,24 @@ Since this exercise was a simple API, I researched what Python framework was the
 
 I then spent some time reading over the documentation and referencing best practices for creating a clear project structure. It seemed like the best way to go about creating a simple API was to have the following simply because it separates concerns into clear files/classes:
 1. Base folder that provided the application configuration and settings via a Settings class.
-  1. Currently this only defines the App Name and the DB connection string
+    1. Currently this only defines the App Name and the DB connection string
 2. A crud folder for any operations that were performed against the database, broken up by models.
-  1. Currently this only defines the Account crud operations and logic
+    1. Currently this only defines the Account crud operations and logic
 3. A db folder, which set up and provided database connections
-  1. Currently this creates the database connection and provides an easy method to grab it
+    1. Currently this creates the database connection and provides an easy method to grab it
 4. A models folder that used the SQLAlchemy ORM to map models to tables.
-  1. Currently only defines the Account model
-    1. This model validates that the name is no longer than 255 characters, has a unique name (case insensitve), and is not nullable
-    2. It also validates that we store any balances with a decimal precision of 2 and at most 13 digits. It also sets a default to 0.00 if undefined.
-    3. This model will also validate that the balance does not go below 0 and will throw an exception as we do not want to overdraw
-    4. I also added an additional case-insensitive uniqueness index to prevent saving duplicate account names
+    1. Currently only defines the Account model
+        1. This model validates that the name is no longer than 255 characters, has a unique name (case insensitve), and is not nullable
+        2. It also validates that we store any balances with a decimal precision of 2 and at most 13 digits. It also sets a default to 0.00 if undefined.
+        3. This model will also validate that the balance does not go below 0 and will throw an exception as we do not want to overdraw
+        4. I also added an additional case-insensitive uniqueness index to prevent saving duplicate account names
 5. A routers folder that for storing all the rest routes for specific models
-  1. This simply defines all the routes available for the accounts endpoints.
-  2. It also catches errors early on so we can return something nice before it goes haywire further down
+    1. This simply defines all the routes available for the accounts endpoints.
+    2. It also catches errors early on so we can return something nice before it goes haywire further down
 6. A schemas folder to define the structure of objects we expect to receive and return via json.
-  1. AccountBase defines the minimum we need to create an account and persist to the db
-  2. DepositWithdraw defines what we expect the deposit/withdraw request json bodies to look like
-  3. Account defines what the account object will look like when read from the database and mapped to and object
+    1. AccountBase defines the minimum we need to create an account and persist to the db
+    2. DepositWithdraw defines what we expect the deposit/withdraw request json bodies to look like
+    3. Account defines what the account object will look like when read from the database and mapped to and object
 
 Besides the project structure I went with SQLLite for my database as this provided the simplest way to spin up a database on the fly. 
 The SQLAclhemy library is database agnostic, which is why I chose it for the ORM library. One could prepare a database of their chosing and change the SQLALCHEMY_DATABASE_URL config setting beforehand.
