@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from decimal import Decimal
 
 
 class AccountBase(BaseModel):
@@ -6,11 +7,11 @@ class AccountBase(BaseModel):
 
 
 class DepositWithdraw(BaseModel):
-    amount: float
+    amount: Decimal
 
 class Account(AccountBase):
     id: int
-    balance: float
+    balance: Decimal
 
     class Config:
         orm_mode = True
